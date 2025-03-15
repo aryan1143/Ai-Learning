@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Learning Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Processing</div>
+  </div>
+  <div class="page-container">
+    <h1 class="section-heading">Learning Path</h1>
+    <nav class="nav">
+      <button onclick="showView('learning')">Learning Path</button>
+      <button onclick="showView('teacher')">AI Teacher</button>
+      <button onclick="showView('resume')">Resume Builder</button>
+      <button id="modelSwitchButton" onclick="toggleGeminiModel()">Switch to deep model</button>
+      <button onclick="showView('history')">History</button>
+    </nav>
+
+    <div class="views-container">
+      <div class="view" id="learning">
+        <div class="section-wrapper">
+          <input id="skillInput" type="text" placeholder="What skill do you want to learn?" />
+          <button onclick="generateLearningPath()">Generate Plan</button>
+          <div id="learningResult"></div>
+        </div>
+      </div>
+
+      <div class="view" id="teacher">
+        <div class="section-wrapper">
+          <textarea id="questionInput" placeholder="Ask me anything..."></textarea>
+          <button onclick="askAIQuestion()">Get Answer</button>
+          <div id="answerResult"></div>
+        </div>
+      </div>
+
+      <div class="view" id="resume">
+        <div class="section-wrapper">
+          <textarea id="resumeInput" placeholder="Paste your information here..."></textarea>
+          <button onclick="generateResume()">Create Resume</button>
+          <div id="resumeResult"></div>
+        </div>
+      </div>
+
+      <div class="view" id="history">
+        <div class="section-wrapper" id="historyContent">
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
