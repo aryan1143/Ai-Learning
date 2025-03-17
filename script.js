@@ -1,6 +1,6 @@
 const API_KEY = 'AIzaSyBS7ZAE7mPtcn2KXncbSZLuYRYfsZEfgaM';
 let currentView = 'learning';
-let currentModel = "gemini-2.0-flash";
+let currentModel = "gemini-2.0-flash-thinking-exp-01-21";
 
 document.addEventListener("DOMContentLoaded", () => {
     showView('learning');
@@ -70,11 +70,11 @@ function showView(viewId) {
     // Remove active class from all views and buttons
     document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
     document.querySelectorAll('.nav button').forEach(btn => btn.classList.remove('active'));
-    
+
     // Add active class to selected view and its button
     document.getElementById(viewId).classList.add('active');
     document.querySelector(`.nav button[onclick*="${viewId}"]`).classList.add('active');
-    
+
     // Update heading text
     const headingMap = {
         'learning': 'Learning Path',
@@ -83,19 +83,19 @@ function showView(viewId) {
         'history': 'History'
     };
     document.querySelector('.section-heading').textContent = headingMap[viewId];
-    
+
     currentView = viewId;
     if (viewId === 'history') updateHistoryView();
 }
 
 function toggleGeminiModel() {
     const button = document.getElementById('modelSwitchButton');
-    if (currentModel === "gemini-2.0-flash") {
+    if (currentModel === "gemini-2.0-flash-thinking-exp-01-21") {
         currentModel = "gemini-2.0-flash-exp";
-        button.textContent = "Switch to fast model";
+        button.textContent = "Switch to stable model";
         button.classList.add('deep-model');
     } else {
-        currentModel = "gemini-2.0-flash";
+        currentModel = "gemini-2.0-flash-thinking-exp-01-21";
         button.textContent = "Switch to deep model";
         button.classList.remove('deep-model');
     }
@@ -134,35 +134,68 @@ async function callGeminiAPI(prompt) {
 
 async function generateLearningPath() {
     const skill = document.getElementById('skillInput').value;
-    const prompt = `Generate a 4-week to  24 weeks depend on what the skill is learning path for ${skill} in HTML format with:
-      - Weekly sections with <h3> headers
-      - Daily topics in <ul> lists
-      - Resources as <a> links
-      - Projects in <div class="project">
-      Use this structure:
-      <div class="learning-path">
-          <div class="week">
-              <h3>Week 1</h3>
-              <div class="days">
-                  <div class="day">
-                      <h4>Day 1</h4>
-                      <ul class="topics"></ul>
-                      <div class="resources"></div>
-                  </div>
-              </div>
-              <div class="project"></div>
-          </div>
+    const prompt = `Generate a learning path for ${skill} in HTML format. The duration should be between 4-24 weeks based on skill complexity. Use EXACTLY this structure:
+
+<style>
+.learning-path {
+    padding: 2rem;
+    background: linear-gradient(45deg, #0a192f, #172a45);
+    color: #e0e0e0
+}
+.week {
+    background: linear-gradient(45deg, #112240, #233554);
+    margin: 2rem 0;
+    padding: 1.5rem; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5)
+}
+.day {
+    background: linear-gradient(45deg, #0d1b2a, #1b263b);
+    padding: 1rem 2.5rem;
+    margin: 1rem 0;
+    border-radius: 8px
+}
+.project {
+    border-left: 4px solid #87CEEB;
+    padding: 1rem;
+    margin: 1.5rem 0
+}
+a {
+    color: #64ffda;
+    text-decoration: none;
+    margin: 1rem 0;
+}
+</style>
+
+<div class="learning-path">
+  <!-- Repeat week blocks based on needed duration -->
+  <div class="week">
+    <h3>Week N: [Theme]</h3>
+    <div class="days">
+      <div class="day">
+        <h4>Day N</h4>
+        <ul class="topics">
+          <li>[Specific learning objective]</li>
+        </ul>
+        <div class="resources">
+          <a href="[URL]">[Resource title]</a>
+        </div>
       </div>
-      Include inline styling for:
-        - Background colors: use rich dark gradients (for days: linear-gradient(45deg, #0d1b2a, #1b263b); for weeks: linear-gradient(45deg, #112240, #233554))
-        - Text colors: use contrasting light shades (e.g., #e0e0e0)
-        - Border-radius: 8px
-        -Border-left: sky blue left border on project div
-        - Padding: 1rem
-        - Box shadows: 0 2px 8px rgba(0,0,0,0.5)
-        - Proper spacing between elements
-      Most important thing:
-        - don't give anything other than the learning path`;
+    </div>
+    <div class="project">
+      [Project description with measurable outcome]
+    </div>
+  </div>
+</div>
+
+Requirements:
+1. Duration (4-24 weeks) proportional to skill complexity
+2. Real-world projects every week
+3. Progressive difficulty curve
+4. Authoritative resource links
+5. No markdown, only HTML
+6. Strictly follow the provided structure
+7. Output ONLY the HTML code`;
+
     try {
         const result = await callGeminiAPI(prompt);
         document.getElementById('learningResult').innerHTML = result;
@@ -189,7 +222,8 @@ async function askAIQuestion() {
            * Font-family: system-ui
       Structure the answer with clear sections and modern web formatting.
       Most important thing:
-        - don't give anything other than the answer`;
+        - don't give anything other than the answer
+        - ensure that this should be responsive`;
     try {
         const result = await callGeminiAPI(prompt);
         document.getElementById('answerResult').innerHTML = result;
